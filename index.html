@@ -26,7 +26,20 @@ h2.sec { font-size:23px; margin:32px 0 12px; padding-left:12px; border-left:6px 
 .info { background:#eef4fa; border:1.5px solid #cfdfef; border-radius:14px; padding:12px 18px; font-size:16px; }
 .info li { margin:0 0 4px 19px; }
 footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
-@media (max-width:680px){ .duo{flex-direction:column;} h1{font-size:26px;} }
+.qhead { display:flex; justify-content:space-between; align-items:flex-end; gap:14px; flex-wrap:wrap; padding:4px 4px 0; }
+.qname { font-size:21px; font-weight:800; }
+.qsub { color:#66788a; font-size:15px; }
+.qprice { font-size:46px; font-weight:900; line-height:1.15; font-variant-numeric:tabular-nums; text-align:right; }
+.qdiff { font-size:19px; font-weight:800; text-align:right; font-variant-numeric:tabular-nums; }
+.qgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px 14px; margin-top:14px; padding:12px 4px 2px; border-top:1px solid #eef1f4; }
+.qgrid span { display:block; color:#8494a5; font-size:14px; }
+.qgrid b { font-size:18.5px; font-variant-numeric:tabular-nums; }
+.qnote { color:#8494a5; font-size:14px; margin-top:10px; padding:0 4px; }
+.mini .mp { font-size:27px; font-weight:900; font-variant-numeric:tabular-nums; line-height:1.25; }
+.mini .md { font-size:15.5px; font-weight:700; font-variant-numeric:tabular-nums; }
+.up { color:#c22f2f; }
+.dn { color:#0b8a4b; }
+@media (max-width:680px){ .duo{flex-direction:column;} h1{font-size:26px;} .qprice{font-size:38px;} .qgrid{grid-template-columns:repeat(2,1fr);} }
 </style>
 </head>
 <body>
@@ -47,13 +60,10 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
   {
   "symbols": [
-    {"proName": "TAIFEX:TX1!", "title": "台指期"},
-    {"proName": "TWSE:TAIEX", "title": "加權指數"},
-    {"proName": "SGX:TWN1!", "title": "富時台指期"},
     {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
     {"proName": "FOREXCOM:NAS100", "title": "Nasdaq 100"},
     {"proName": "FOREXCOM:DJI", "title": "道瓊"},
-    {"proName": "NASDAQ:SOX", "title": "費城半導體"},
+    {"proName": "AMEX:SOXX", "title": "半導體ETF"},
     {"proName": "NASDAQ:NVDA", "title": "輝達"},
     {"proName": "NYSE:TSM", "title": "台積電ADR"},
     {"proName": "FX_IDC:USDTWD", "title": "美元/台幣"}
@@ -69,105 +79,50 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
 
 <h2 class="sec">一、台指期（早盤＋夜盤）</h2>
 <div class="panel">
-  <div class="cap">台指期近月連續（TAIFEX）· 5 分 K · 日盤與夜盤在同一張圖上，盤別切換不用換頁</div>
-  <div class="tradingview-widget-container" style="height:560px;width:100%">
-    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-    {
-    "autosize": true,
-    "symbol": "TAIFEX:TX1!",
-    "interval": "5",
-    "timezone": "Asia/Taipei",
-    "theme": "light",
-    "style": "1",
-    "locale": "zh_TW",
-    "allow_symbol_change": true,
-    "calendar": false,
-    "support_host": "https://www.tradingview.com"
-  }
-    </script>
+  <div class="qhead">
+    <div>
+      <div class="qname" id="q-name">臺指期 近月</div>
+      <div class="qsub" id="q-sub">資料載入中…</div>
+    </div>
+    <div>
+      <div class="qprice" id="q-price">—</div>
+      <div class="qdiff" id="q-diff">—</div>
+    </div>
   </div>
+  <div class="qgrid">
+    <div><span>開盤</span><b id="q-open">—</b></div>
+    <div><span>最高</span><b id="q-high">—</b></div>
+    <div><span>最低</span><b id="q-low">—</b></div>
+    <div><span>成交量</span><b id="q-vol">—</b></div>
+    <div><span>未平倉</span><b id="q-oi">—</b></div>
+    <div><span>報價時間</span><b id="q-time">—</b></div>
+  </div>
+  <div class="qnote" id="q-note">正在連線期交所行情…</div>
 </div>
 
 <div class="duo">
-  <div class="panel">
-    <div class="cap">加權指數（現貨）</div>
-    <div class="tradingview-widget-container" style="height:230px;width:100%">
-      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-      {
-      "symbols": [["加權指數", "TWSE:TAIEX|1D"]],
-      "chartOnly": false,
-      "width": "100%",
-      "height": "100%",
-      "locale": "zh_TW",
-      "colorTheme": "light",
-      "autosize": true,
-      "showVolume": false,
-      "showMA": false,
-      "hideDateRanges": false,
-      "hideMarketStatus": false,
-      "hideSymbolLogo": false,
-      "scalePosition": "right",
-      "scaleMode": "Normal",
-      "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-      "fontSize": "10",
-      "noTimeScale": false,
-      "valuesTracking": "1",
-      "changeMode": "price-and-percent",
-      "chartType": "area",
-      "maLineColor": "#2962FF",
-      "maLineWidth": 1,
-      "maLength": 9,
-      "lineWidth": 2,
-      "lineType": 0,
-      "dateRanges": ["1d|1", "1w|60", "1m|1D", "3m|1D", "1y|1W", "all|1M"]
-    }
-      </script>
-    </div>
+  <div class="panel mini">
+    <div class="cap" id="m1-t">台指期 次月</div>
+    <div class="mp" id="m1-p">—</div>
+    <div class="md" id="m1-d">—</div>
   </div>
-  <div class="panel">
-    <div class="cap">富時台指期（SGX）· 夜盤與清晨時段的參考</div>
-    <div class="tradingview-widget-container" style="height:230px;width:100%">
-      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-      {
-      "symbols": [["富時台指期", "SGX:TWN1!|1D"]],
-      "chartOnly": false,
-      "width": "100%",
-      "height": "100%",
-      "locale": "zh_TW",
-      "colorTheme": "light",
-      "autosize": true,
-      "showVolume": false,
-      "showMA": false,
-      "hideDateRanges": false,
-      "hideMarketStatus": false,
-      "hideSymbolLogo": false,
-      "scalePosition": "right",
-      "scaleMode": "Normal",
-      "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-      "fontSize": "10",
-      "noTimeScale": false,
-      "valuesTracking": "1",
-      "changeMode": "price-and-percent",
-      "chartType": "area",
-      "maLineColor": "#2962FF",
-      "maLineWidth": 1,
-      "maLength": 9,
-      "lineWidth": 2,
-      "lineType": 0,
-      "dateRanges": ["1d|1", "1w|60", "1m|1D", "3m|1D", "1y|1W", "all|1M"]
-    }
-      </script>
-    </div>
+  <div class="panel mini" id="m2-card">
+    <div class="cap" id="m2-t">小台指 近月</div>
+    <div class="mp" id="m2-p">—</div>
+    <div class="md" id="m2-d">—</div>
+  </div>
+  <div class="panel mini">
+    <div class="cap">加權指數（現貨）</div>
+    <div class="mp" id="m3-p">—</div>
+    <div class="md" id="m3-d">—</div>
   </div>
 </div>
 
 <div class="info">
 <ul>
-<li><b>台指期時段（台北時間）：</b>日盤 08:45–13:45 · 夜盤 15:00–隔日 05:00（週一至週五）。</li>
+<li><b>台指期時段（台北時間）：</b>日盤 08:45–13:45 · 夜盤 15:00–隔日 05:00（週一至週五）。上方大字會自動切換：夜盤時段顯示夜盤價，其他時間顯示日盤。</li>
 <li><b>每點價值：</b>大台 TX 每點 NT$200、小台 MTX 每點 NT$50、微台 TMF 每點 NT$10。</li>
+<li><b>漲跌顏色</b>照台灣慣例：<span class="up"><b>紅漲</b></span>、<span class="dn"><b>綠跌</b></span>。</li>
 </ul>
 </div>
 
@@ -195,7 +150,7 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
           {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
           {"s": "FOREXCOM:NAS100", "d": "Nasdaq 100"},
           {"s": "FOREXCOM:DJI", "d": "道瓊 30"},
-          {"s": "NASDAQ:SOX", "d": "費城半導體"}
+          {"s": "AMEX:SOXX", "d": "半導體 ETF SOXX"}
         ],
         "originalName": "Indices"
       },
@@ -241,19 +196,15 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
 <div class="info">
 <ul>
 <li><b>美股時段（台北時間）：</b>夏令 21:30–04:00 · 冬令 22:30–05:00。上方狀態會自動判斷目前是夏令還是冬令、開盤了沒。</li>
-<li><b>圖表會自己更新</b>，不用手動重新整理；台指期夜盤時段，美股正在開盤，兩個市場可以對照著看。</li>
+<li><b>美股圖表會自己更新</b>，不用手動重新整理；台指期夜盤時段，美股正在開盤，兩個市場可以對照著看。</li>
 </ul>
 </div>
 
-<footer>圖表與報價由 TradingView 提供 · 台指期為交易所延遲行情（約 10 分鐘），美股依資料源可能略有延遲 · 本頁僅供參考，非投資建議</footer>
+<footer>台指期資料來源：臺灣期貨交易所（經 GitHub Actions 每約 5 分鐘抓取，非逐秒即時）· 美股圖表與報價由 TradingView 提供，依資料源可能略有延遲 · 本頁僅供參考，非投資建議</footer>
 </div>
 
 <script>
 (function(){
-  function taipeiNow(){
-    var s = new Date().toLocaleString('en-US',{timeZone:'Asia/Taipei',hour12:false,weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    return s; // e.g. "Thu, 23:15:30" variants; parse below robustly instead
-  }
   function parts(){
     var d = new Date();
     var fmt = new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
@@ -264,7 +215,6 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
              text: o.hour + ':' + o.minute + ':' + o.second };
   }
   function usDST(){
-    // US DST: 2nd Sunday of March .. 1st Sunday of November (Eastern)
     var now = new Date();
     var y = parseInt(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric'}).format(now),10);
     function nthSunday(year, month, n){
@@ -279,17 +229,15 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
     var p = parts();
     document.getElementById('clock').textContent = p.text;
     var wd = p.wd, m = p.mins;
-    // 台指期
-    var txOn = false, txLabel = '休市', txTime = '日盤 08:45–13:45 · 夜盤 15:00–05:00';
+    var txOn = false, txLabel = '休市';
     if (wd>=1 && wd<=5 && m>=525 && m<825) { txOn = true; txLabel = '日盤交易中'; }
     else if ((wd>=1 && wd<=5 && m>=900) || (wd>=2 && wd<=6 && m<300)) { txOn = true; txLabel = '夜盤交易中'; }
     document.getElementById('tx-state').textContent = txLabel;
-    document.getElementById('tx-time').textContent = txTime;
+    document.getElementById('tx-time').textContent = '日盤 08:45–13:45 · 夜盤 15:00–05:00';
     document.getElementById('st-tx').classList.toggle('on', txOn);
-    // 美股
     var dst = usDST();
-    var open = dst ? 1290 : 1350;   // 21:30 or 22:30
-    var close = dst ? 240 : 300;    // 04:00 or 05:00
+    var open = dst ? 1290 : 1350;
+    var close = dst ? 240 : 300;
     var usOn = (wd>=1 && wd<=5 && m>=open) || (wd>=2 && wd<=6 && m<close);
     document.getElementById('us-state').textContent = usOn ? '交易中' : '未開盤／已收盤';
     document.getElementById('us-time').textContent = dst ? '夏令 21:30–04:00' : '冬令 22:30–05:00';
@@ -297,6 +245,89 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
   }
   refresh();
   setInterval(refresh, 1000);
+  window.__parts = parts;
+})();
+</script>
+
+<script>
+(function(){
+  var QURL = 'https://raw.githubusercontent.com/Lingo1516/market-watch/data/quotes.json';
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? null : n; }
+  function fmt(v, dec){
+    var n = num(v);
+    if (n === null) return '—';
+    return n.toLocaleString('en-US',{minimumFractionDigits:dec, maximumFractionDigits:dec});
+  }
+  function signFmt(v, dec){
+    var n = num(v);
+    if (n === null) return '—';
+    return (n > 0 ? '+' : '') + fmt(v, dec);
+  }
+  function clsOf(v){ var n = num(v); return n > 0 ? 'up' : (n < 0 ? 'dn' : ''); }
+  function setDiff(el, q, dec){
+    el.textContent = signFmt(q.CDiff, dec) + '（' + signFmt(q.CDiffRate, 2) + '%）';
+    el.className = 'qdiff ' + clsOf(q.CDiff);
+  }
+  function setMini(pEl, dEl, q, dec){
+    if (!q || !q.CLastPrice) { pEl.textContent = '—'; dEl.textContent = '休市或無資料'; return; }
+    pEl.textContent = fmt(q.CLastPrice, dec);
+    pEl.className = 'mp ' + clsOf(q.CDiff);
+    dEl.textContent = signFmt(q.CDiff, dec) + '（' + signFmt(q.CDiffRate, 2) + '%）';
+    dEl.className = 'md ' + clsOf(q.CDiff);
+  }
+  function isNight(){
+    var p = window.__parts();
+    return (p.wd>=1 && p.wd<=5 && p.mins>=900) || (p.wd>=2 && p.wd<=6 && p.mins<300);
+  }
+  function monthLabel(q){ return (q.DispCName || '').replace('臺指期','').replace('小臺指期','') + '月'; }
+  function load(){
+    fetch(QURL + '?t=' + Math.floor(Date.now()/60000), {cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(d){
+        var qs = d.quotes || [];
+        var txF = qs.filter(function(q){ return /^TXF[A-Z]\d-F$/.test(q.SymbolID); });
+        var txM = qs.filter(function(q){ return /^TXF[A-Z]\d-M$/.test(q.SymbolID); });
+        var night = isNight();
+        var head = (night && txM[0] && txM[0].CLastPrice) ? txM[0] : txF[0];
+        if (head) {
+          var sess = (head === txM[0]) ? '夜盤' : '日盤';
+          document.getElementById('q-name').textContent = '臺指期 近月（' + monthLabel(head) + '）';
+          document.getElementById('q-sub').textContent = sess + ' · ' + head.SymbolID.replace(/-[FM]$/,'');
+          var priceEl = document.getElementById('q-price');
+          priceEl.textContent = fmt(head.CLastPrice, 0);
+          priceEl.className = 'qprice ' + clsOf(head.CDiff);
+          setDiff(document.getElementById('q-diff'), head, 0);
+          document.getElementById('q-open').textContent = fmt(head.COpenPrice, 0);
+          document.getElementById('q-high').textContent = fmt(head.CHighPrice, 0);
+          document.getElementById('q-low').textContent = fmt(head.CLowPrice, 0);
+          document.getElementById('q-vol').textContent = fmt(head.CTotalVolume, 0);
+          document.getElementById('q-oi').textContent = head.OpenInterest ? fmt(head.OpenInterest, 0) : '—';
+          var t = head.CTime || '';
+          document.getElementById('q-time').textContent = t ? (t.slice(0,2)+':'+t.slice(2,4)+':'+t.slice(4,6)) : '—';
+        }
+        var next = night ? txM[1] : txF[1];
+        if (next) document.getElementById('m1-t').textContent = '台指期 次月（' + monthLabel(next) + '）';
+        setMini(document.getElementById('m1-p'), document.getElementById('m1-d'), next, 0);
+        var suf = night ? '-M' : '-F';
+        var mtx = qs.filter(function(q){ return q.SymbolID.indexOf('MTX') === 0 && q.SymbolID.slice(-2) === suf; });
+        if (!mtx.length) mtx = qs.filter(function(q){ return q.SymbolID.indexOf('MTX') === 0; });
+        if (mtx.length) {
+          document.getElementById('m2-t').textContent = '小台指 近月（' + (mtx[0].DispCName || '').replace('小臺指期','').replace('臺指期','') + '月）';
+          setMini(document.getElementById('m2-p'), document.getElementById('m2-d'), mtx[0], 0);
+        } else {
+          document.getElementById('m2-card').style.display = 'none';
+        }
+        var spot = null;
+        qs.forEach(function(q){ if (q.SymbolID === 'TXF-S') spot = q; });
+        setMini(document.getElementById('m3-p'), document.getElementById('m3-d'), spot, 2);
+        document.getElementById('q-note').textContent = '資料來源：臺灣期貨交易所 · 最近抓取 ' + (d.updated || '—') + ' · 本區每 60 秒自動重新整理（行情約 5 分鐘更新一次）';
+      })
+      .catch(function(){
+        document.getElementById('q-note').textContent = '期交所資料暫時抓不到，60 秒後自動重試…';
+      });
+  }
+  load();
+  setInterval(load, 60000);
 })();
 </script>
 </body>
