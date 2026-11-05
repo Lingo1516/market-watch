@@ -1,1 +1,37 @@
-# placeholder
+name: quotes
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch TAIFEX quotes
+        run: |
+          curl -s --max-time 50 -X POST 'https://mis.taifex.com.tw/futures/api/getQuoteList' -H 'Content-Type: application/json' -d '{"Req":{"SymbolID":["TX","MTX"],"SymbolType":["F"]}}' -o raw.json
+          python3 - <<'PYEOF'
+          import json, datetime
+          d = json.load(open('raw.json'))
+          tz = datetime.timezone(datetime.timedelta(hours=8))
+          out = {
+              'updated': datetime.datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S'),
+              'quotes': d['RtData']['QuoteList'],
+          }
+          json.dump(out, open('quotes.json', 'w'), ensure_ascii=False)
+          print('quotes:', len(out['quotes']))
+          PYEOF
+      - name: Push quotes.json to data branch
+        run: |
+          git init -q
+          git config user.email 'actions@github.com'
+          git config user.name 'quote-bot'
+          git checkout -q --orphan data
+          git add quotes.json
+          git commit -qm 'update quotes'
+          git push -f 'https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git' data
