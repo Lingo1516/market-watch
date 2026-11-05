@@ -12,26 +12,47 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch TAIFEX quotes
+      - name: Fetch TAIFEX quotes and update data branch
         run: |
-          curl -s --max-time 50 -X POST 'https://mis.taifex.com.tw/futures/api/getQuoteList' -H 'Content-Type: application/json' -d '{"Req":{"SymbolID":["TX","MTX"],"SymbolType":["F"]}}' -o raw.json
+          curl -s --max-time 50 -X POST 'https://mis.taifex.com.tw/futures/api/getQuoteList' -H 'Content-Type: application/json' -d '{"Req":{"SymbolID":["TX"],"SymbolType":["F"]}}' -o raw.json
+          git clone -q --depth 1 --branch data 'https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git' work || { mkdir -p work; cd work; git init -q; git checkout -q --orphan data; cd ..; }
           python3 - <<'PYEOF'
-          import json, datetime
-          d = json.load(open('raw.json'))
+          import json, datetime, os
           tz = datetime.timezone(datetime.timedelta(hours=8))
-          out = {
-              'updated': datetime.datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S'),
-              'quotes': d['RtData']['QuoteList'],
-          }
-          json.dump(out, open('quotes.json', 'w'), ensure_ascii=False)
-          print('quotes:', len(out['quotes']))
+          now = datetime.datetime.now(tz)
+          d = json.load(open('raw.json'))
+          quotes = d['RtData']['QuoteList']
+          out = {'updated': now.strftime('%Y-%m-%d %H:%M:%S'), 'quotes': quotes}
+          json.dump(out, open('work/quotes.json', 'w'), ensure_ascii=False)
+          hp = 'work/history.json'
+          hist = []
+          if os.path.exists(hp):
+              try:
+                  hist = json.load(open(hp))
+              except Exception:
+                  hist = []
+          def front(suffix):
+              for q in quotes:
+                  sid = q['SymbolID']
+                  if sid.startswith('TXF') and len(sid) > 5 and sid.endswith(suffix) and q.get('CLastPrice'):
+                      return q
+              return None
+          for suf in ('-F', '-M'):
+              q = front(suf)
+              if q:
+                  hist.append({'sym': q['SymbolID'], 'date': q.get('CDate', ''), 'time': q.get('CTime', ''), 'price': float(q['CLastPrice'])})
+          ded = []
+          for h in hist:
+              key = (h['sym'], h['date'], h['time'])
+              if not ded or (ded[-1]['sym'], ded[-1]['date'], ded[-1]['time']) != key:
+                  ded.append(h)
+          json.dump(ded[-600:], open(hp, 'w'), ensure_ascii=False)
+          print('history points:', len(ded))
           PYEOF
-      - name: Push quotes.json to data branch
-        run: |
-          git init -q
+          cd work
           git config user.email 'actions@github.com'
           git config user.name 'quote-bot'
-          git checkout -q --orphan data
-          git add quotes.json
-          git commit -qm 'update quotes'
-          git push -f 'https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git' data
+          git remote add origin 'https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git' 2>/dev/null || true
+          git add quotes.json history.json
+          git commit -qm 'update quotes' || echo 'no change'
+          git push -q origin data
