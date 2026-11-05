@@ -21,25 +21,26 @@ h1 { font-size:31px; line-height:1.4; margin:8px 0 4px; }
 h2.sec { font-size:23px; margin:32px 0 12px; padding-left:12px; border-left:6px solid #0b5cad; }
 .panel { background:#fff; border-radius:16px; box-shadow:0 3px 14px rgba(30,50,80,.08); padding:14px; margin-bottom:20px; }
 .panel .cap { font-size:15.5px; color:#66788a; margin:2px 2px 10px; }
-.duo { display:flex; gap:16px; }
+.duo { display:flex; gap:16px; align-items:flex-start; }
 .duo .panel { flex:1; }
 .info { background:#eef4fa; border:1.5px solid #cfdfef; border-radius:14px; padding:12px 18px; font-size:16px; }
 .info li { margin:0 0 4px 19px; }
 footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
 .qhead { display:flex; justify-content:space-between; align-items:flex-end; gap:14px; flex-wrap:wrap; padding:4px 4px 0; }
-.qname { font-size:21px; font-weight:800; }
+.qname { font-size:24px; font-weight:900; }
 .qsub { color:#66788a; font-size:15px; }
-.qprice { font-size:46px; font-weight:900; line-height:1.15; font-variant-numeric:tabular-nums; text-align:right; }
-.qdiff { font-size:19px; font-weight:800; text-align:right; font-variant-numeric:tabular-nums; }
-.qgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px 14px; margin-top:14px; padding:12px 4px 2px; border-top:1px solid #eef1f4; }
+.qprice { font-size:56px; font-weight:900; line-height:1.1; font-variant-numeric:tabular-nums; text-align:right; }
+.qdiff { font-size:21px; font-weight:800; text-align:right; font-variant-numeric:tabular-nums; }
+.qgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px 14px; margin-top:12px; padding:12px 4px 2px; border-top:1px solid #eef1f4; }
 .qgrid span { display:block; color:#8494a5; font-size:14px; }
 .qgrid b { font-size:18.5px; font-variant-numeric:tabular-nums; }
 .qnote { color:#8494a5; font-size:14px; margin-top:10px; padding:0 4px; }
+#spark { margin-top:10px; padding:0 4px; }
 .mini .mp { font-size:27px; font-weight:900; font-variant-numeric:tabular-nums; line-height:1.25; }
 .mini .md { font-size:15.5px; font-weight:700; font-variant-numeric:tabular-nums; }
 .up { color:#c22f2f; }
 .dn { color:#0b8a4b; }
-@media (max-width:680px){ .duo{flex-direction:column;} h1{font-size:26px;} .qprice{font-size:38px;} .qgrid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:680px){ .duo{flex-direction:column;} .duo .panel{width:100%;} h1{font-size:26px;} .qprice{font-size:44px;} .qgrid{grid-template-columns:repeat(2,1fr);} }
 </style>
 </head>
 <body>
@@ -54,34 +55,11 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
   </div>
 </header>
 
-<!-- Ticker Tape -->
-<div class="tradingview-widget-container" style="margin-top:14px">
-  <div class="tradingview-widget-container__widget"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-  {
-  "symbols": [
-    {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
-    {"proName": "FOREXCOM:NAS100", "title": "Nasdaq 100"},
-    {"proName": "FOREXCOM:DJI", "title": "道瓊"},
-    {"proName": "NASDAQ:SOXX", "title": "半導體ETF"},
-    {"proName": "NASDAQ:NVDA", "title": "輝達"},
-    {"proName": "NYSE:TSM", "title": "台積電ADR"},
-    {"proName": "FX_IDC:USDTWD", "title": "美元/台幣"}
-  ],
-  "showSymbolLogo": false,
-  "isTransparent": true,
-  "displayMode": "adaptive",
-  "colorTheme": "light",
-  "locale": "zh_TW"
-}
-  </script>
-</div>
-
-<h2 class="sec">一、台指期（早盤＋夜盤）</h2>
+<h2 class="sec">一、台指期</h2>
 <div class="panel">
   <div class="qhead">
     <div>
-      <div class="qname" id="q-name">臺指期 近月</div>
+      <div class="qname" id="q-name">台指期</div>
       <div class="qsub" id="q-sub">資料載入中…</div>
     </div>
     <div>
@@ -89,6 +67,7 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
       <div class="qdiff" id="q-diff">—</div>
     </div>
   </div>
+  <div id="spark"></div>
   <div class="qgrid">
     <div><span>開盤</span><b id="q-open">—</b></div>
     <div><span>最高</span><b id="q-high">—</b></div>
@@ -106,8 +85,8 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
     <div class="mp" id="m1-p">—</div>
     <div class="md" id="m1-d">—</div>
   </div>
-  <div class="panel mini" id="m2-card">
-    <div class="cap" id="m2-t">小台指 近月</div>
+  <div class="panel mini">
+    <div class="cap" id="m2-t">另一時段</div>
     <div class="mp" id="m2-p">—</div>
     <div class="md" id="m2-d">—</div>
   </div>
@@ -120,55 +99,71 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
 
 <div class="info">
 <ul>
-<li><b>台指期時段（台北時間）：</b>日盤 08:45–13:45 · 夜盤 15:00–隔日 05:00（週一至週五）。上方大字會自動切換：夜盤時段顯示夜盤價，其他時間顯示日盤。</li>
-<li><b>每點價值：</b>大台 TX 每點 NT$200、小台 MTX 每點 NT$50、微台 TMF 每點 NT$10。</li>
-<li><b>漲跌顏色</b>照台灣慣例：<span class="up"><b>紅漲</b></span>、<span class="dn"><b>綠跌</b></span>。</li>
+<li><b>自動切換：</b>早上打開看日盤、晚上打開看夜盤，大字顯示的就是當下時段，不用找。</li>
+<li><b>台指期時段（台北時間）：</b>日盤 08:45–13:45 · 夜盤 15:00–隔日 05:00（週一至週五）。走勢線每約 5 分鐘累積一個點。</li>
+<li><b>每點價值：</b>大台 TX 每點 NT$200、小台 MTX 每點 NT$50。漲跌顏色照台灣慣例：<span class="up"><b>紅漲</b></span>、<span class="dn"><b>綠跌</b></span>。</li>
 </ul>
 </div>
 
-<h2 class="sec">二、美股即時狀況</h2>
-<div class="panel">
-  <div class="cap">主要指數與重點個股 · 點任一列可看走勢圖</div>
-  <div class="tradingview-widget-container" style="height:540px;width:100%">
-    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-    {
-    "colorTheme": "light",
-    "dateRange": "1D",
-    "showChart": true,
-    "locale": "zh_TW",
-    "width": "100%",
-    "height": "100%",
-    "largeChartUrl": "",
-    "isTransparent": true,
-    "showSymbolLogo": true,
-    "showFloatingTooltip": true,
-    "tabs": [
+<h2 class="sec">二、美股：四大指數 × 熱門股票</h2>
+<div class="duo">
+  <div class="panel">
+    <div class="cap">四大指數 · 即時漲跌</div>
+    <div class="tradingview-widget-container" style="height:330px;width:100%">
+      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
       {
-        "title": "指數",
-        "symbols": [
-          {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
-          {"s": "FOREXCOM:NAS100", "d": "Nasdaq 100"},
-          {"s": "FOREXCOM:DJI", "d": "道瓊 30"},
-          {"s": "NASDAQ:SOXX", "d": "半導體 ETF SOXX"}
-        ],
-        "originalName": "Indices"
-      },
+      "width": "100%",
+      "height": "100%",
+      "symbolsGroups": [
+        {
+          "name": "指數",
+          "symbols": [
+            {"name": "FOREXCOM:SPXUSD", "displayName": "S&P 500 標普"},
+            {"name": "FOREXCOM:NAS100", "displayName": "那斯達克 100"},
+            {"name": "FOREXCOM:DJI", "displayName": "道瓊工業"},
+            {"name": "NASDAQ:SOXX", "displayName": "費城半導體（SOXX）"}
+          ]
+        }
+      ],
+      "showSymbolLogo": false,
+      "isTransparent": true,
+      "colorTheme": "light",
+      "locale": "zh_TW"
+    }
+      </script>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="cap">熱門股票 · 即時漲跌</div>
+    <div class="tradingview-widget-container" style="height:560px;width:100%">
+      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
       {
-        "title": "重點個股",
-        "symbols": [
-          {"s": "NASDAQ:NVDA", "d": "輝達 NVDA"},
-          {"s": "NYSE:TSM", "d": "台積電 ADR"},
-          {"s": "NASDAQ:AAPL", "d": "蘋果 AAPL"},
-          {"s": "NASDAQ:MSFT", "d": "微軟 MSFT"},
-          {"s": "NASDAQ:AVGO", "d": "博通 AVGO"},
-          {"s": "NASDAQ:AMD", "d": "超微 AMD"}
-        ],
-        "originalName": "Stocks"
-      }
-    ]
-  }
-    </script>
+      "width": "100%",
+      "height": "100%",
+      "symbolsGroups": [
+        {
+          "name": "個股",
+          "symbols": [
+            {"name": "NASDAQ:NVDA", "displayName": "輝達 NVDA"},
+            {"name": "NYSE:TSM", "displayName": "台積電 ADR"},
+            {"name": "NASDAQ:AAPL", "displayName": "蘋果 AAPL"},
+            {"name": "NASDAQ:MSFT", "displayName": "微軟 MSFT"},
+            {"name": "NASDAQ:AVGO", "displayName": "博通 AVGO"},
+            {"name": "NASDAQ:AMD", "displayName": "超微 AMD"},
+            {"name": "NASDAQ:TSLA", "displayName": "特斯拉 TSLA"},
+            {"name": "NASDAQ:MU", "displayName": "美光 MU"}
+          ]
+        }
+      ],
+      "showSymbolLogo": false,
+      "isTransparent": true,
+      "colorTheme": "light",
+      "locale": "zh_TW"
+    }
+      </script>
+    </div>
   </div>
 </div>
 
@@ -196,11 +191,11 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
 <div class="info">
 <ul>
 <li><b>美股時段（台北時間）：</b>夏令 21:30–04:00 · 冬令 22:30–05:00。上方狀態會自動判斷目前是夏令還是冬令、開盤了沒。</li>
-<li><b>美股圖表會自己更新</b>，不用手動重新整理；台指期夜盤時段，美股正在開盤，兩個市場可以對照著看。</li>
+<li><b>美股數字是即時串流</b>，會自己跳，不用重新整理。</li>
 </ul>
 </div>
 
-<footer>台指期資料來源：臺灣期貨交易所（經 GitHub Actions 每約 5 分鐘抓取，非逐秒即時）· 美股圖表與報價由 TradingView 提供，依資料源可能略有延遲 · 本頁僅供參考，非投資建議</footer>
+<footer>台指期資料來源：臺灣期貨交易所（每約 5 分鐘抓取更新，非逐秒即時）· 美股報價由 TradingView 提供，依資料源可能略有延遲 · 本頁僅供參考，非投資建議</footer>
 </div>
 
 <script>
@@ -251,7 +246,7 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
 
 <script>
 (function(){
-  var QURL = 'https://raw.githubusercontent.com/Lingo1516/market-watch/data/quotes.json';
+  var BASE = 'https://raw.githubusercontent.com/Lingo1516/market-watch/data/';
   function num(v){ var n = parseFloat(v); return isNaN(n) ? null : n; }
   function fmt(v, dec){
     var n = num(v);
@@ -264,10 +259,6 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
     return (n > 0 ? '+' : '') + fmt(v, dec);
   }
   function clsOf(v){ var n = num(v); return n > 0 ? 'up' : (n < 0 ? 'dn' : ''); }
-  function setDiff(el, q, dec){
-    el.textContent = signFmt(q.CDiff, dec) + '（' + signFmt(q.CDiffRate, 2) + '%）';
-    el.className = 'qdiff ' + clsOf(q.CDiff);
-  }
   function setMini(pEl, dEl, q, dec){
     if (!q || !q.CLastPrice) { pEl.textContent = '—'; dEl.textContent = '休市或無資料'; return; }
     pEl.textContent = fmt(q.CLastPrice, dec);
@@ -279,24 +270,60 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
     var p = window.__parts();
     return (p.wd>=1 && p.wd<=5 && p.mins>=900) || (p.wd>=2 && p.wd<=6 && p.mins<300);
   }
-  function monthLabel(q){ return (q.DispCName || '').replace('臺指期','').replace('小臺指期','') + '月'; }
+  function isDay(){
+    var p = window.__parts();
+    return (p.wd>=1 && p.wd<=5 && p.mins>=525 && p.mins<825);
+  }
+  function monthLabel(q){ return (q.DispCName || '').replace('臺指期','') + '月'; }
+  var headSym = null, headDate = null, headDiff = 0;
+  function drawSpark(hist){
+    var box = document.getElementById('spark');
+    if (!headSym) { box.innerHTML = ''; return; }
+    var pts = hist.filter(function(h){ return h.sym === headSym && h.date === headDate; });
+    if (pts.length < 2) {
+      box.innerHTML = '<div class="qnote">走勢線累積中（每約 5 分鐘一點，稍後再看會更完整）</div>';
+      return;
+    }
+    var W = 960, H = 110, PAD = 6;
+    var vals = pts.map(function(h){ return h.price; });
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+    if (mx - mn < 10) { var mid = (mx + mn) / 2; mx = mid + 5; mn = mid - 5; }
+    var X = function(i){ return PAD + (W - 2 * PAD) * i / (pts.length - 1); };
+    var Y = function(v){ return PAD + (H - 2 * PAD) * (1 - (v - mn) / (mx - mn)); };
+    var line = pts.map(function(h, i){ return (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(h.price).toFixed(1); }).join(' ');
+    var area = line + ' L' + X(pts.length - 1).toFixed(1) + ' ' + H + ' L' + X(0).toFixed(1) + ' ' + H + ' Z';
+    var color = headDiff > 0 ? '#c22f2f' : (headDiff < 0 ? '#0b8a4b' : '#66788a');
+    var t0 = pts[0].time, t1 = pts[pts.length - 1].time;
+    function tf(t){ return t && t.length >= 4 ? t.slice(0,2) + ':' + t.slice(2,4) : ''; }
+    box.innerHTML =
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:110px;display:block" preserveAspectRatio="none">' +
+      '<path d="' + area + '" fill="' + color + '" opacity="0.10"></path>' +
+      '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="2.2"></path></svg>' +
+      '<div style="display:flex;justify-content:space-between;color:#8494a5;font-size:13.5px;padding:0 2px">' +
+      '<span>' + tf(t0) + ' · ' + fmt(mn, 0) + '</span><span>本時段走勢（高 ' + fmt(mx, 0) + ' / 低 ' + fmt(mn, 0) + '）</span><span>' + tf(t1) + '</span></div>';
+  }
   function load(){
-    fetch(QURL + '?t=' + Math.floor(Date.now()/60000), {cache:'no-store'})
+    var bucket = Math.floor(Date.now() / 60000);
+    fetch(BASE + 'quotes.json?t=' + bucket, {cache:'no-store'})
       .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(d){
         var qs = d.quotes || [];
         var txF = qs.filter(function(q){ return /^TXF[A-Z]\d-F$/.test(q.SymbolID); });
         var txM = qs.filter(function(q){ return /^TXF[A-Z]\d-M$/.test(q.SymbolID); });
-        var night = isNight();
-        var head = (night && txM[0] && txM[0].CLastPrice) ? txM[0] : txF[0];
+        var night = isNight(), day = isDay();
+        var head = null, sess = '';
+        if (night && txM[0] && txM[0].CLastPrice) { head = txM[0]; sess = '夜盤'; }
+        else if (txF[0]) { head = txF[0]; sess = night ? '日盤（今日收盤）' : '日盤'; }
         if (head) {
-          var sess = (head === txM[0]) ? '夜盤' : '日盤';
-          document.getElementById('q-name').textContent = '臺指期 近月（' + monthLabel(head) + '）';
-          document.getElementById('q-sub').textContent = sess + ' · ' + head.SymbolID.replace(/-[FM]$/,'');
+          headSym = head.SymbolID; headDate = head.CDate; headDiff = num(head.CDiff) || 0;
+          document.getElementById('q-name').textContent = '台指期 ' + sess + ' · 近月（' + monthLabel(head) + '）';
+          document.getElementById('q-sub').textContent = '大台 TX · ' + head.SymbolID.replace(/-[FM]$/,'');
           var priceEl = document.getElementById('q-price');
           priceEl.textContent = fmt(head.CLastPrice, 0);
           priceEl.className = 'qprice ' + clsOf(head.CDiff);
-          setDiff(document.getElementById('q-diff'), head, 0);
+          var diffEl = document.getElementById('q-diff');
+          diffEl.textContent = signFmt(head.CDiff, 0) + '（' + signFmt(head.CDiffRate, 2) + '%）';
+          diffEl.className = 'qdiff ' + clsOf(head.CDiff);
           document.getElementById('q-open').textContent = fmt(head.COpenPrice, 0);
           document.getElementById('q-high').textContent = fmt(head.CHighPrice, 0);
           document.getElementById('q-low').textContent = fmt(head.CLowPrice, 0);
@@ -304,24 +331,21 @@ footer { text-align:center; color:#8494a5; font-size:13.5px; margin-top:30px; }
           document.getElementById('q-oi').textContent = head.OpenInterest ? fmt(head.OpenInterest, 0) : '—';
           var t = head.CTime || '';
           document.getElementById('q-time').textContent = t ? (t.slice(0,2)+':'+t.slice(2,4)+':'+t.slice(4,6)) : '—';
+          document.getElementById('q-note').textContent = '資料來源：臺灣期貨交易所 · 最近抓取 ' + (d.updated || '—') + ' · 每 60 秒自動重新整理';
         }
-        var next = night ? txM[1] : txF[1];
-        if (next) document.getElementById('m1-t').textContent = '台指期 次月（' + monthLabel(next) + '）';
-        setMini(document.getElementById('m1-p'), document.getElementById('m1-d'), next, 0);
-        var suf = night ? '-M' : '-F';
-        var mtx = qs.filter(function(q){ return q.SymbolID.indexOf('MTX') === 0 && q.SymbolID.slice(-2) === suf; });
-        if (!mtx.length) mtx = qs.filter(function(q){ return q.SymbolID.indexOf('MTX') === 0; });
-        if (mtx.length) {
-          document.getElementById('m2-t').textContent = '小台指 近月（' + (mtx[0].DispCName || '').replace('小臺指期','').replace('臺指期','') + '月）';
-          setMini(document.getElementById('m2-p'), document.getElementById('m2-d'), mtx[0], 0);
-        } else {
-          document.getElementById('m2-card').style.display = 'none';
-        }
+        var list = night ? txM : txF;
+        var other = night ? txF[0] : txM[0];
+        document.getElementById('m1-t').textContent = '台指期 次月（' + (list[1] ? monthLabel(list[1]) : '—') + '）· ' + (night ? '夜盤' : '日盤');
+        setMini(document.getElementById('m1-p'), document.getElementById('m1-d'), list[1], 0);
+        document.getElementById('m2-t').textContent = night ? '台指期 日盤（今日收盤）' : '台指期 夜盤（最近一盤）';
+        setMini(document.getElementById('m2-p'), document.getElementById('m2-d'), other, 0);
         var spot = null;
         qs.forEach(function(q){ if (q.SymbolID === 'TXF-S') spot = q; });
         setMini(document.getElementById('m3-p'), document.getElementById('m3-d'), spot, 2);
-        document.getElementById('q-note').textContent = '資料來源：臺灣期貨交易所 · 最近抓取 ' + (d.updated || '—') + ' · 本區每 60 秒自動重新整理（行情約 5 分鐘更新一次）';
+        return fetch(BASE + 'history.json?t=' + bucket, {cache:'no-store'});
       })
+      .then(function(r){ return r && r.ok ? r.json() : []; })
+      .then(function(hist){ if (Array.isArray(hist)) drawSpark(hist); })
       .catch(function(){
         document.getElementById('q-note').textContent = '期交所資料暫時抓不到，60 秒後自動重試…';
       });
